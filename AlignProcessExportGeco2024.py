@@ -4,7 +4,7 @@ import argparse
 
 def process_project(project_path):
     # Open the existing project
-    doc = Metashape.Document()
+    doc: object = Metashape.Document()
     doc.open(project_path, ignore_lock=True)
 
     # Define the base directory for output files (relative paths)
@@ -59,8 +59,7 @@ def process_project(project_path):
     f = Metashape.TiePoints.Filter()  # Create filter object
     threshold = 0.5  # Create reprojection error threshold
     f.init(chunk, criterion=Metashape.TiePoints.Filter.ReprojectionError)  # Init with reprojection error criterion
-    f.selectPoints(threshold)  # Select points with reprojection error greater than the threshold
-    chunk.point_cloud.removeSelectedPoints()  # Remove the selected points
+    f.removePoints(threshold)  # Remove points with reprojection error greater than the threshold
     doc.save()
 
     # Optimize camera alignment by adjusting intrinsic parameters
