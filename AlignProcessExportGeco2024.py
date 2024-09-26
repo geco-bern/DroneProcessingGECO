@@ -1,7 +1,7 @@
 import Metashape
 import os
 import argparse
-
+test
 def process_project(project_path):
     # Open the existing project
     doc = Metashape.Document()
