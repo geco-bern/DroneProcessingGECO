@@ -70,8 +70,13 @@ Example:
 - Press **Locate Panels**. If the panels are not automatically recognized, follow the instructions for manual panel detection in the Appendix [here](https://agisoft.freshdesk.com/support/solutions/articles/31000148381-micasense-altum-processing-workflow-including-reflectance-calibration-in-agisoft-metashape-professi).
 
 The values should look like this (sometimes you have to paste the value for Panchro manually to get the correct calibration):
-
-Blue 0.507825 Green 0.509237 Panchro 0.508196 Red 0.509254 Red edge 0.508659 NIR 0.506765 LWIR
+Blue		0.507825
+Green		0.509237
+Panchro	0.508196
+Red		0.509254
+Red edge	0.508659
+NIR		0.506765
+LWIR	
 
 
 ### 5. Save the Project Again
