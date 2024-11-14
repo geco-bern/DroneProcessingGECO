@@ -122,8 +122,15 @@ def process_project_preprocessing(project_path):
     doc.save()
     
 def clear_storage_space(project_path):
-        script_path = "/home/jziegler/DroneProcessingGECO/DroneProcessingGECO/ClearinStorageSpace.py"
-        subprocess.run(["python3", script_path, project_path])
+   print(f"Opening project: {project_path}")
+   doc = Metashape.Document()
+   doc.open(project_path, ignore_lock=True)
+   for chunk in doc.chunks:
+      if chunk.orthomosaic is not None:
+         print(f'Removing orthoPhotos for chunk: {chunk.label}')
+         chunk.orthomosaic.removeOrthophotos()
+   doc.save()
+   print(f"Storage space cleared for project: {project_path}")
         
 def process_multiple_projects(project_paths):
     for project_path in project_paths:
