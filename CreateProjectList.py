@@ -51,5 +51,6 @@ if __name__ == "__main__":
     print(f"Projects with orthomosaic: {len(projects_with_orthomosaic)}")
     print(f"Projects without orthomosaic: {len(projects_without_orthomosaic)}")
 
-    write_projects_to_file(projects_with_orthomosaic, "projects_with_orthomosaic.txt")
-    write_projects_to_file(projects_without_orthomosaic, "projects_without_orthomosaic.txt")
+    output_dir = directory
+    write_projects_to_file(projects_with_orthomosaic, os.path.join(output_dir, "projects_with_orthomosaic.txt"))
+    write_projects_to_file(projects_without_orthomosaic, os.path.join(output_dir, "projects_without_orthomosaic.txt"))
