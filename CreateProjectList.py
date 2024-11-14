@@ -1,5 +1,6 @@
 import os
 import Metashape
+import argparse
 
 
 def find_metashape_projects(directory, extension=".psx"):
@@ -14,7 +15,11 @@ def find_metashape_projects(directory, extension=".psx"):
     return metashape_projects
 
 if __name__ == "__main__":
-    directory = "/data/scratch/jaziegler/testProjects"  # Replace with your directory path
+    parser = argparse.ArgumentParser(description="Search for Metashape projects in a directory.")
+    parser.add_argument("directory", type=str, help="Directory to search for Metashape projects")
+    args = parser.parse_args()
+
+    directory = args.directory
     print(f"Starting search in directory: {directory}")
     projects = find_metashape_projects(directory)
     print(f"Total projects found: {len(projects)}")
