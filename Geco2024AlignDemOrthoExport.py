@@ -1,6 +1,7 @@
 import Metashape
 import os
 import argparse
+import subprocess
 
 def process_project_preprocessing(project_path):
     # Open the existing project
@@ -108,15 +109,21 @@ def process_project_preprocessing(project_path):
         print(f"Exporting Orthomosaic to {ortho_path}...")
         chunk.exportRaster(path=ortho_path, source_data=Metashape.OrthomosaicData, image_format=Metashape.ImageFormatTIFF, image_compression=compression, raster_transform=Metashape.RasterTransformValue, projection=ortho_proj)
     
-    doc.save()
-    
     # Export the processing report
     report_path = os.path.join(export_dir, chunk.label + "_report.pdf")
     print(f"Exporting processing report to {report_path}...")
     chunk.exportReport(report_path)
     
     doc.save()
-
+    # Clean up the project flder and get rid of the temporary files (see the ClearStorageSpace.py script)
+    
+    clear_storage_space(project_path)
+    
+    doc.save()
+def clear_storage_space(project_path):
+        script_path = "/home/jziegler/DroneProcessingGECO/DroneProcessingGECO/ClearStorageSpace.py"
+        subprocess.run(["python3", script_path, project_path])
+        
 def process_multiple_projects(project_paths):
     for project_path in project_paths:
         process_project_preprocessing(project_path)
