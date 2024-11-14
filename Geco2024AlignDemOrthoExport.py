@@ -107,7 +107,14 @@ def process_project_preprocessing(project_path):
         ortho_path = os.path.join(export_dir, chunk.label + "_Ortho.tif")
         print(f"Exporting Orthomosaic to {ortho_path}...")
         chunk.exportRaster(path=ortho_path, source_data=Metashape.OrthomosaicData, image_format=Metashape.ImageFormatTIFF, image_compression=compression, raster_transform=Metashape.RasterTransformValue, projection=ortho_proj)
-
+    
+    doc.save()
+    
+    # Export the processing report
+    report_path = os.path.join(export_dir, chunk.label + "_report.pdf")
+    print(f"Exporting processing report to {report_path}...")
+    chunk.exportReport(report_path)
+    
     doc.save()
 
 def process_multiple_projects(project_paths):
