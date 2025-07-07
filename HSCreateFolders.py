@@ -13,10 +13,10 @@ def create_project_structure():
     # --- 1. Get Main Project Folder (where Site folders will reside) ---
     while True:
         main_project_folder_str = input(
-            "\nEnter the path to your MAIN PROJECT FOLDER (e.g., C:\\Hyperspectral_Projects default): "
+            "\nEnter the path to your MAIN PROJECT FOLDER (e.g., D:\\Hyperspectral_Projects default): "
         ).strip()
         if not main_project_folder_str:
-            main_project_folder_str = "C:\\Hyperspectral_Projects"  # Default path if empty !!!! CHANGE THIS TO YOUR DEFAULT PATH
+            main_project_folder_str = "D:\\Hyperspectral_Projects"  # Default path if empty !!!! CHANGE THIS TO YOUR DEFAULT PATH
         # Ensure the path is a valid directory
         main_project_path = Path(main_project_folder_str)
         if main_project_path.exists() and main_project_path.is_dir():
