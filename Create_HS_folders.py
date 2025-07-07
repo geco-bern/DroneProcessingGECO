@@ -13,8 +13,11 @@ def create_project_structure():
     # --- 1. Get Main Project Folder (where Site folders will reside) ---
     while True:
         main_project_folder_str = input(
-            "\nEnter the path to your MAIN PROJECT FOLDER (e.g., C:\\Hyperspectral_Projects or /home/user/hyperspectral): "
+            "\nEnter the path to your MAIN PROJECT FOLDER (e.g., C:\\Hyperspectral_Projects default): "
         ).strip()
+        if not main_project_folder_str:
+            main_project_folder_str = "C:\\Hyperspectral_Projects"  # Default path if empty !!!! CHANGE THIS TO YOUR DEFAULT PATH
+        # Ensure the path is a valid directory
         main_project_path = Path(main_project_folder_str)
         if main_project_path.exists() and main_project_path.is_dir():
             print(f"Using main project folder: {main_project_path}")
@@ -33,7 +36,7 @@ def create_project_structure():
 
 
     # --- 2. Get Site Name ---
-    site_name = input("\nEnter the SITE NAME (e.g., Saillon, Lens): ").strip()
+    site_name = input("\nEnter the SITE NAME (e.g., Saillon, Lens, Bern_S1P1G1 (Thermebodewald Plot1 and Gradient), Bern_S1P2 (Thermebodewald Plot2), Bern_S2P1G1 (Drakau Plot1 and Gradient), Bern_S2P3(Drakau Plot 3)): ").strip()
     if not site_name:
         print("Site name cannot be empty. Exiting.")
         return
@@ -46,7 +49,7 @@ def create_project_structure():
             datetime.datetime.strptime(flight_date_str, '%Y%m%d')
             break
         except ValueError:
-            print("Invalid date format. Please use YYYYMMDD (e.g., 20250707).")
+            print("Invalid date format. Please use `YYYYMMDD` (e.g., 20250707).")
 
     # --- 4. Get Flight ID ---
     flight_id = input("Enter the FLIGHT ID (e.g., Flight1, Run_A, leave empty for default 'Flight1'): ").strip()
@@ -65,7 +68,7 @@ def create_project_structure():
         "01_Raw/SWIPOS_Base_Data",
         "02_Processed/Processed_GPS_IMU",
         "02_Processed/DEM",
-        "02_Processed/Processed_Images",
+        "02_Processed/Processed_Images", # This is where ortho.ini and lidar.ini will go
         "03_Results/Analysis_Products",
         "03_Results/Reports_and_Logs",
     ]
@@ -104,8 +107,85 @@ def create_project_structure():
 
         # Create all subdirectories within the flight folder
         for sub_dir in flight_sub_structure:
-            (flight_path / sub_dir).mkdir(parents=True, exist_ok=True)
-            print(f"  Created: {flight_path / sub_dir}")
+            current_dir_path = flight_path / sub_dir
+            current_dir_path.mkdir(parents=True, exist_ok=True)
+            print(f"  Created: {current_dir_path}")
+
+            # Special handling for 'Processed_Images' to create .ini files
+            if sub_dir == "02_Processed/Processed_Images":
+                # Content for ortho.ini
+                ortho_ini_content = """Lens EFL (mm) = 8.02
+Ortho Lens EFL (mm) = 8.295
+Array Pixel Pitch (um) = 5.86
+Alpha (deg) = 0
+Beta (deg) = 0
+Gamma (deg) = 0
+Roll offset (deg) = -0.38
+Pitch offset (deg) = 0.2
+Yaw offset (deg) = 0
+Roll (right positive) = 1
+Pitch (front up positive) = 0
+Yaw (north-east positive) = 1
+Time Offset = 0
+Altitude Offset = 0
+Col binning = 1
+Correct Timestamps = 1
+Zero DEM = 0
+Invert Columns = 0
+Correct Position = 1
+saveOnlyLL = 1
+usePostProcess = 1
+usePPS = 0
+OrthoFieldsSensor = 0
+OrthoFieldsGpsUnit = 0
+geoidCorrection = 0"""
+                ortho_ini_file_path = current_dir_path / "ortho.ini"
+                try:
+                    with open(ortho_ini_file_path, 'w') as f:
+                        f.write(ortho_ini_content)
+                    print(f"    Created file: {ortho_ini_file_path}")
+                except Exception as file_e:
+                    print(f"    Warning: Could not create ortho.ini file: {file_e}")
+
+                # Content for lidar.ini
+                lidar_ini_content = """[LidarTools]
+demInterpolate=true
+matchHsData=true
+demNoDataValue=-9999
+fromSeconds=146.09
+toSeconds=151.6
+rollOffset=90.17
+rollRightPositive=true
+pitchOffset=0.084
+pitchFrontUpPositive=false
+yawOffset=0.244
+yawNorthEastPositive=true
+gpsOffsetX=0.114
+gpsOffsetY=-0.022
+gpsOffsetZ=0.037
+timeOffset=0
+usePostProcessFile=true
+usePpsTxtFile=false
+saveTimestamps=true
+invertLaserAngle=false
+laserAngleRotation=0
+rotationalOffset=-90
+minRotationalAngle=0
+maxRotationalAngle=360
+minDistance=1
+minLaserAngle=-20
+maxLaserAngle=20
+maxIntensity=128
+doubleSpinBoxSpacing=0.25
+demOutputValues=mean"""
+                lidar_ini_file_path = current_dir_path / "lidar.ini"
+                try:
+                    with open(lidar_ini_file_path, 'w') as f:
+                        f.write(lidar_ini_content)
+                    print(f"    Created file: {lidar_ini_file_path}")
+                except Exception as file_e:
+                    print(f"    Warning: Could not create lidar.ini file: {file_e}")
+
 
         print(f"\nSuccessfully created the folder structure for '{site_name}' flight '{flight_folder_name}'!")
         print(f"Root of new flight structure: {flight_path}")
@@ -116,3 +196,4 @@ def create_project_structure():
 
 if __name__ == "__main__":
     create_project_structure()
+
